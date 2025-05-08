@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Profile Fetcher</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #869ddb;
+            margin: 0;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 250px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-left: 10px;
+            background-color: #090e0a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #256c3c;
+        }
+
+        #posts {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #posts > div {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        #posts img {
+            display: block;
+            margin-top: 15px;
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>FETCH THE POSTS from GitHub WEBSITE</h1>
+    <input id="input" type="text" placeholder="Enter GitHub username">
+    <button onclick="fetchdata()">Fetch</button>
+    <div id="posts"></div>
+
+    <script>
+        let parentDiv = document.getElementById("posts");
+        let username = document.getElementById("input");
+
+        function fetchdata() {
+            fetch(`https://api.github.com/users/${username.value}`)
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data);
+                    parentDiv.innerHTML = "";
+                    let divele = document.createElement("div");
+                    divele.innerHTML = `
+                        <div><strong>Username:</strong> ${data.login}</div>
+                        <div><strong>URL:</strong> <a href="${data.html_url}" target="_blank">${data.html_url}</a></div>
+                        <div><strong>Bio:</strong> ${data.bio || "No bio available"}</div>
+                        <img src="${data.avatar_url}" alt="Avatar">
+                    `;
+                    parentDiv.appendChild(divele);
+                })
+                .catch((err) => {
+                    console.log("error", err);
+                });
+        }
+    </script>
+</body>
+</html>
